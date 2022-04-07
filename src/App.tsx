@@ -1,15 +1,17 @@
 import React from 'react';
+import Color from './components/Color';
+import InputData from './components/InputData';
+import timeZones from './config/time-zones';
 
 
 import Timer from './components/Timer';
 
 function App() {
-  return  <div style={{display: "flex", alignItems: "center", marginTop: "30vh", flexDirection:"column"}}>
-<div style={{display: "flex", justifyContent: "space-around"}}><Timer timeZone='Asia/Urumqi' city="Beijing"/>
-<Timer timeZone='Europe/London' city="London"/></div>
-<div style={{display: "flex", justifyContent: "space-around"}}><Timer timeZone='Asia/Jerusalem' city="Jerusalem"/>
-<Timer timeZone='Europe/Paris' city="Paris"/></div>
-
+const [timeZone, setTimeZone] = React.useState("Asia/Jerusalem")
+  return  <div>
+    <Color color={'red'}></Color>
+    <Timer timeZone={timeZone}></Timer>
+    <InputData timeZones={timeZones} injectTimeZone={setTimeZone}></InputData>
     </div>
 }
 
