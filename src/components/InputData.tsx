@@ -1,22 +1,37 @@
 import React from 'react'
 type Props = {
     timeZones: any[],
-    injectTimeZone: (timeZone: string) => void
+    colors: string[],
+    injectTimeZone: (timeZone: string) => void,
+    injectColor: (color: string) => void
 }
-let selectElem: any;
-const InputData: React.FC<Props> = ({timeZones, injectTimeZone}) => {
-    function onSelect() {
-        injectTimeZone(selectElem.value)
+let selectTimeZoneElem: any;
+let selectColorElem: any;
+const InputData: React.FC<Props> = ({timeZones, injectTimeZone, colors, injectColor}) => {
+    function onSelectTimeZone() {
+        injectTimeZone(selectTimeZoneElem.value)
     }
+    function onSelectColor() {
+        injectColor(selectColorElem.value);
+    }
+    
     React.useEffect(() => {
-        selectElem = document.getElementById('selectInputData');
+      selectTimeZoneElem = document.getElementById('selectTimeZone');
+        selectColorElem = document.getElementById('selectColor')
     })
 
-return <div>
-    <select id='selectInputData' >
+return <div><div>
+    <select id='selectTimeZone' >
         {timeZones.map(tz => <option value={tz.name}>{tz.name}</option>)}
     </select>
-    <button onClick={onSelect}>GO</button>
+    <button onClick={onSelectTimeZone}>GO</button>
+    </div>
+    <div>
+    <select id='selectColor' >
+        {colors.map(c => <option value={c}>{c}</option>)}
+    </select>
+    <button onClick={onSelectColor}>GO</button>
+    </div>
     </div>
 }
 export default InputData;
