@@ -7,6 +7,10 @@ function App() {
 
   return  <div>
     <Life dimension={lifeGameConfig.dimension} ticInterval={lifeGameConfig.tic} ></Life>
+    <br></br> <br></br> <br></br>
+    <Life dimension={lifeGameConfig.dimension} ticInterval={lifeGameConfig.tic} ></Life>
+
+    
     </div>
 }
 

@@ -11,9 +11,10 @@ export default class LifeMatrix {
         return this._numbers
     }
     nextStep(): number[][] {
-        const numbersCopy: number[][] = JSON.parse(JSON.stringify(this.numbers));
+        const numbersCopy: number[][]= new Array<number[]>();
         for (let i = 0; i < this.numbers.length; i++) {
-            for (let j = 0; j < this.numbers[i].length; j++) {
+            numbersCopy[i] = [];
+            for (let j = 0; j < this._numbers[i].length; j++) {
                 numbersCopy[i][j] = this.getNumber(i, j);
             }
         }
@@ -23,12 +24,12 @@ export default class LifeMatrix {
     private getNumber(i: number, j: number): number {
         const neighbours: (number|undefined)[] =
             [...this.rowNeighbours(i-1,j),...this.rowNeighbours(i+1,j),
-                this.numbers[i][j-1], this.numbers[i][j+1]];
+                this._numbers[i][j-1], this._numbers[i][j+1]];
         const nLives = neighbours.reduce((res: number, cur) => {
             return cur ? res + 1 : res;
         }, 0)
 
-        return this.numbers[i][j] ? fromAlive(nLives) : fromDead(nLives);
+        return this._numbers[i][j] ? fromAlive(nLives) : fromDead(nLives);
     }
     private rowNeighbours(i: number, j: number):(number|undefined)[] {
        return this.numbers[i]===undefined ? [undefined] : [this.numbers[i][j],
