@@ -13,7 +13,7 @@ export const STATISTIC_HOURS_PATH = '/statistic/hours';
 export const STATISTIC_COST_PATH = '/statistic/cost';
 export const LOGIN_PATH = '/login';
 export const LOGOUT_PATH = '/logout';
-export const GENERATION_PATH = '/generartion';
+export const GENERATION_PATH = '/generation';
 export const ROUTES:RouteType[] = [
     {path: COURSES_PATH, label: 'Courses', element: <Courses/>},
     {path: ADD_COURSE_PATH, label: 'New Course', element: <AddCourse/>},
