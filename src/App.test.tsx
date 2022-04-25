@@ -1,4 +1,3 @@
-import React from 'react';
 import LifeMatrix from './service/LifeMatrix';
 const numbersInitial = [
   [0, 0, 0, 0, 0],
