@@ -1,5 +1,6 @@
 import React from "react";
 import { coursesService } from "../../config/service-config";
+import { getMinMaxAvgByField } from "../../util/functions";
 const StatisticHours: React.FC = () =>
 {
     //TODO 
@@ -9,8 +10,11 @@ const StatisticHours: React.FC = () =>
     //first lable contains maximal hours from all courses
     //second lable contains minimal hours from all courses
     //third label contains average hours from all courses
-    return <label style={{fontSize: 40}}>
-        StatisticHours page is working
-    </label>
+    const statObj = getMinMaxAvgByField(coursesService.get(), 'hours');
+    return <div style={{fontSize: 30, display: 'flex', justifyContent: 'space-evenly'}}>
+        <label>min hours = {statObj.min}</label>
+        <label>max hours = {statObj.max}</label>
+        <label>avg hours = {statObj.avg}</label>
+    </div>
 }
 export default StatisticHours;

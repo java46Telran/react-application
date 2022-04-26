@@ -1,5 +1,6 @@
 import React from "react";
 import { coursesService } from "../../config/service-config";
+import { getMinMaxAvgByField } from "../../util/functions";
 const StatisticCost: React.FC = () =>
 {
     //TODO 
@@ -9,8 +10,11 @@ const StatisticCost: React.FC = () =>
     //first lable contains maximal cost from all courses
     //second lable contains minimal cost from all courses
     //third label contains average cost from all courses
-    return <label style={{fontSize: 40}}>
-        StatisticCost page is working
-    </label>
+    const statObj = getMinMaxAvgByField(coursesService.get(), 'cost');
+    return <div style={{fontSize: 30, display: 'flex', justifyContent: 'space-evenly'}}>
+        <label>min cost = {statObj.min}</label>
+        <label>max cost = {statObj.max}</label>
+        <label>avg cost = {statObj.avg}</label>
+    </div>
 }
 export default StatisticCost;

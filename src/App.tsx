@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import {  ROUTES } from './config/routes-config';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import {  COURSES_PATH, ROUTES } from './config/routes-config';
 import Navigator from './components/navigators/Navigator';
 
 const App: React.FC = () => {
@@ -9,7 +9,8 @@ return <BrowserRouter>
 
 <Routes>
   {getRoutes()}
-</Routes>
+  
+</Routes> 
 </BrowserRouter> 
 
  
