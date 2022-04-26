@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
-import { COURSES_PATH } from "../../config/routes-config";
+import { Link} from "react-router-dom";
 import { RouteType } from "../../models/RouteType";
 const Navigator: React.FC<{items:RouteType[]}> = ({items}) => {
     function getLinks(): React.ReactNode {

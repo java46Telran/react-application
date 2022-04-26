@@ -4,9 +4,11 @@ import {  COURSES_PATH, ROUTES } from './config/routes-config';
 import Navigator from './components/navigators/Navigator';
 
 const App: React.FC = () => {
+  const [flNavigate, setFlNavigate] = React.useState<boolean>(true);
+  React.useEffect(() => setFlNavigate(false), [])
 return <BrowserRouter>
 <Navigator items={ROUTES} />
-
+{flNavigate && <Navigate to={COURSES_PATH}></Navigate>}
 <Routes>
   {getRoutes()}
   

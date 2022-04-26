@@ -6,7 +6,7 @@ export function range (minInclusive: number, maxExclusive: number): number[] {
  return res;
 }
 export function getMinMaxAvgByField(array: any[], field: string): {min: number, max: number, avg: number} {
-    if (!array || array.length == 0 || !array[0][field] || typeof (array[0][field]) != 'number') {
+    if (!array || array.length === 0 || !array[0][field] || typeof (array[0][field]) !== 'number') {
         return {min: 0, max:0, avg:0};
     }
    const resObj: {min: number, max: number, avg: number} =  array.reduce((res, cur) => ({min: res.min > cur[field] ? cur[field] : res.min,
