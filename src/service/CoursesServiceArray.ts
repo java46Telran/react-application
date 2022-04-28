@@ -9,10 +9,22 @@ export default class CoursesServiceArray implements CoursesService {
         courses.push(course);
     }
     remove(id: number): void {
-        //TODO
+        const index = this.getIndex(id);
+        courses.splice(index, 1);
+    }
+   private getIndex(id: number): number {
+        const index = courses.findIndex(c => c.id === id);
+        if (index < 0) {
+            throw `course with id ${id} doesn't exist`
+        }
+        return index;
     }
     update(id: number, course: Course): void {
-        //TODO
+        const index = this.getIndex(id);
+        if (id !== course.id) {
+            throw `No match of id ${id} with course.id ${course.id}`;
+        }
+        courses[index] = course;
     }
     get(): Course[] {
         return courses;
