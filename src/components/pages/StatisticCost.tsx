@@ -1,8 +1,7 @@
 import React from "react";
 import { coursesService } from "../../config/service-config";
 import { getMinMaxAvgByField } from "../../util/functions";
-const StatisticCost: React.FC = () =>
-{
+const StatisticCost: React.FC = () => {
     //TODO 
     //you may apply the "lodash" library
     //using method get of CoursesService (imported variable coursesService)
@@ -11,10 +10,10 @@ const StatisticCost: React.FC = () =>
     //second lable contains minimal cost from all courses
     //third label contains average cost from all courses
     const statObj = getMinMaxAvgByField(coursesService.get(), 'cost');
-    return <div style={{fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly'}}>
+    return <div>{statObj.min == 0 ? <label style={{fontSize: "2em"}}>No Data</label> : <div style={{ fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly' }}>
         <label>min cost = {statObj.min}</label>
         <label>max cost = {statObj.max}</label>
         <label>avg cost = {statObj.avg}</label>
-    </div>
+    </div>}</div>
 }
 export default StatisticCost;
