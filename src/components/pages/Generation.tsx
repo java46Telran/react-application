@@ -3,17 +3,16 @@ import { coursesService } from "../../config/service-config";
 import courseData from '../../config/courseData.json'
 import { range } from "../../util/functions";
 import { getRandomCourse } from "../../util/randomCourse";
+import { useDispatch } from "react-redux";
+import { addCourse } from "../../redux/actions";
 const INPUT_GENERATION_ID = "input-generation-id"
 let inputElement:any;
 const Generation: React.FC = () =>
 {
-    //TODO 
-    //input element for inputting number of the courses
-    //using method add of CoursesService (imported variable coursesService)
-    //this component adds inputed number of the random courses
+   const dispatch = useDispatch();
     function onInput() {
        const nCourses: number = +inputElement.value;
-       range(0, nCourses).forEach(i => coursesService.add(getRandomCourse(courseData)))
+       range(0, nCourses).forEach(i => dispatch(addCourse(getRandomCourse(courseData))))
     }
     useEffect(() => {
         inputElement = document.getElementById(INPUT_GENERATION_ID);

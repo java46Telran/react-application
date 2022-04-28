@@ -5,7 +5,7 @@ import { Course } from "../models/Course";
 import { ADD_COURSE_ACTION, REMOVE_COURSE_ACTION, UPDATE_COURSE_ACTION } from "./actions";
 
 export const coursesReducer:Reducer<Course[], PayloadAction<Course | number>> =
- (courses = [], action) => {
+ (courses = [], action):Course[] => {
      switch(action.type) {
          case ADD_COURSE_ACTION: coursesService.add(action.payload as Course); break;
          case REMOVE_COURSE_ACTION: coursesService.remove(action.payload as number); break;
