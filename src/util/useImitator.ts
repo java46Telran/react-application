@@ -4,11 +4,19 @@ import { addCourse } from "../redux/actions";
 import { getRandomCourse } from "./randomCourse";
 import courseData from "../config/courseData.json"
 import { getRandomNumber } from "./random";
+import { useEffect } from "react";
 export function useImitator() {
     const dispatch = useDispatch();
-    setInterval(action, 2000);
+    useEffect(() => {
+        const intervalId = setInterval(action, 2000);
+        
+        return () => clearInterval(intervalId)
+    }, [])
+    
+  
     function action() {
-        const number = getRandomNumber(0,100);
+        const number = getRandomNumber(1,100);
+        console.log(number)
         const imitatorAction: ImitatorAction = getAction(number);
         switch(imitatorAction.action) {
             case 'add': dispatchAdd(); break;
@@ -28,11 +36,6 @@ export function useImitator() {
     }
 }
 
-function getAction(number: any): ImitatorAction {
-    for (let i = 0; i < imitatorActions.length; i++) {
-        if (number < imitatorActions[i].prob) {
-            return imitatorActions[i];
-        }
-    }
-    return imitatorActions[imitatorActions.length - 1];
+function getAction(num: number): ImitatorAction {
+   return imitatorActions.find(ia => num <= ia.prob) ?? imitatorActions[imitatorActions.length - 1]
 }
