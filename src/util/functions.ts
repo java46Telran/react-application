@@ -1,3 +1,5 @@
+import { RouteType } from "../models/RouteType";
+
 export function range (minInclusive: number, maxExclusive: number): number[] {
  const res: number[] = [];
  for (let i = minInclusive; i < maxExclusive; i++) {
@@ -15,4 +17,11 @@ max: res.max < cur[field] ? cur[field] : res.max, avg: res.avg + cur[field]}), {
    resObj.avg = Math.round(resObj.avg / array.length) ;
    return resObj; 
 
+}
+export function getRouteIndex(items: RouteType[], pathname: string): number {
+    let index =  items.findIndex(item => item.path === pathname);
+    if (index < 0) {
+        index = 0;
+    }
+    return index;
 }
