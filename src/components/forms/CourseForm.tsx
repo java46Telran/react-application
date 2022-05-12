@@ -7,9 +7,9 @@ type Props = {
     submitFn: (course: Course) => void;
 }
 const initialCourse: Course = createCourse(0, "",
-"Yosef",0, 5000, new Date());
+"",0, 0, new Date());
 const CourseForm: React.FC<Props> = ({ submitFn }) => {
-    const {courses, minHours, maxHours} = courseData;
+    const {courses, minHours, maxHours, lectors, minCost, maxCost, minYear, maxYear} = courseData;
     const [course, setCourse] = React.useState(initialCourse);
 
 function onSubmit(event: any) {
@@ -23,15 +23,30 @@ function handlerCourse(event: any) {
    console.log(courseCopy.name)
    setCourse(courseCopy);
 }
+function handlerLecturer(event: any) {
+    const courseCopy = {...course};
+    courseCopy.lecturer = event.target.value;
+    setCourse(courseCopy);
+ }
 function handlerHours(event: any) {
     const courseCopy = {...course};
     courseCopy.hours = +event.target.value;
     setCourse(courseCopy);
 }
+function handlerCost(event: any) {
+    const courseCopy = {...course};
+    courseCopy.cost = +event.target.value;
+    setCourse(courseCopy);
+}
+function handlerOpeningDate(event: any) {
+    const courseCopy = {...course};
+    courseCopy.openingDate = new Date(event.target.value);
+    setCourse(courseCopy);
+}
 
     return <form onSubmit={onSubmit}>
-        <Grid container>
-            <Grid item xs={12} sm={6} >
+        <Grid container spacing={{xs: 5, sm: 2, md: 13}} justifyContent="center">
+            <Grid item xs={10} sm={5} >
                 <FormControl fullWidth required>
                     <InputLabel id="course-select-label">Course Name</InputLabel>
                     <Select
@@ -46,27 +61,69 @@ function handlerHours(event: any) {
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField type="number" label="Hours" fullWidth required value={course.hours || ""} 
-                onChange={handlerHours}
+            <Grid item xs={10} sm={5} >
+                <FormControl fullWidth required>
+                    <InputLabel id="course-select-label">Lecturer</InputLabel>
+                    <Select
+                        labelId="course-select-label"
+                        id="demo-simple-select"
+                        label="Lecturer"
+                        value={course.lecturer}
+                        onChange={handlerLecturer}
+                    >
+                        <MenuItem value="">None</MenuItem>
+                       {getCourseItems(lectors)}
+                    </Select>
+                </FormControl>
+            </Grid>
+            <Grid item xs={10} sm={5}>
+                <TextField type="number" label="Hours" fullWidth required  
+                onChange={handlerHours} helperText={`enter number of hours in range [${minHours}-${maxHours} ]`}
                 inputProps={{
                   
                     min: `${minHours}`,
                     max: `${maxHours}`
                   }}/>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={10} sm={5}>
+                <TextField type="number" label="Cost" fullWidth required  
+                onChange={handlerCost} helperText={`enter cost in range [${minCost}-${maxCost} ]`}
+                inputProps={{
+                   
+                    min: `${minCost}`,
+                    max: `${maxCost}`
+                  }}/>
+            </Grid>
+            <Grid item xs={10} sm={8} >
+                        <TextField required label={'Opening Date'} type={'date'} fullWidth
+                        onChange={handlerOpeningDate} inputProps={
+                            {min: `${minYear}-01-01`,
+                             max: `${maxYear}-12-31`}
+                        } InputLabelProps={{
+                            shrink: true
+                        }}/>
+                
+            </Grid>
+            <Grid item xs={12} sm={8} md={6}>
+               <Grid container justifyContent={"center"}>
+               <Grid item xs={5}>
                 <Button type="submit">Submit</Button>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={5}>
                 <Button type="reset">Reset</Button>
             </Grid>
+
+               </Grid>
+
+            </Grid>
+           
+
 
         </Grid>
     </form>
 }
 export default CourseForm;
 
-function getCourseItems(courses: string[]): React.ReactNode {
-    return courses.map(c => <MenuItem value={c} key={c}>{c}</MenuItem>)
+function getCourseItems(items: string[]): React.ReactNode {
+    return items.map(c => <MenuItem value={c} key={c}>{c}</MenuItem>)
 }
