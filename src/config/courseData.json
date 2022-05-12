@@ -5,7 +5,7 @@
     "maxCost": 30000,
     "minHours": 80,
     "maxHours": 500,
-    "minYear": 2000,
+    "minYear": 2018,
     "maxYear":2022,
     "minId": 100000,
     "maxId": 999999,

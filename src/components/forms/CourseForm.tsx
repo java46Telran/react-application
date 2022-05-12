@@ -7,45 +7,49 @@ type Props = {
     submitFn: (course: Course) => void;
 }
 const initialCourse: Course = createCourse(0, "",
-"",0, 0, new Date());
+    "", 0, 0, new Date());
 const CourseForm: React.FC<Props> = ({ submitFn }) => {
-    const {courses, minHours, maxHours, lectors, minCost, maxCost, minYear, maxYear} = courseData;
+    const { courses, minHours, maxHours, lectors, minCost, maxCost, minYear, maxYear } = courseData;
     const [course, setCourse] = React.useState(initialCourse);
 
-function onSubmit(event: any) {
-    event.preventDefault();
-    console.log(course)
-     submitFn(course);
-}
-function handlerCourse(event: any) {
-   const courseCopy = {...course};
-   courseCopy.name = event.target.value;
-   console.log(courseCopy.name)
-   setCourse(courseCopy);
-}
-function handlerLecturer(event: any) {
-    const courseCopy = {...course};
-    courseCopy.lecturer = event.target.value;
-    setCourse(courseCopy);
- }
-function handlerHours(event: any) {
-    const courseCopy = {...course};
-    courseCopy.hours = +event.target.value;
-    setCourse(courseCopy);
-}
-function handlerCost(event: any) {
-    const courseCopy = {...course};
-    courseCopy.cost = +event.target.value;
-    setCourse(courseCopy);
-}
-function handlerOpeningDate(event: any) {
-    const courseCopy = {...course};
-    courseCopy.openingDate = new Date(event.target.value);
-    setCourse(courseCopy);
-}
+    function onSubmit(event: any) {
+        event.preventDefault();
+        console.log(course)
+        submitFn(course);
+        document.querySelector('form')!.reset();
+    }
+    function handlerCourse(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.name = event.target.value;
+        console.log(courseCopy.name)
+        setCourse(courseCopy);
+    }
+    function handlerLecturer(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.lecturer = event.target.value;
+        setCourse(courseCopy);
+    }
+    function handlerHours(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.hours = +event.target.value;
+        setCourse(courseCopy);
+    }
+    function handlerCost(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.cost = +event.target.value;
+        setCourse(courseCopy);
+    }
+    function handlerOpeningDate(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.openingDate = new Date(event.target.value);
+        setCourse(courseCopy);
+    }
+    function onReset() {
+        setCourse(initialCourse)
+    }
 
-    return <form onSubmit={onSubmit}>
-        <Grid container spacing={{xs: 5, sm: 2, md: 13}} justifyContent="center">
+    return <form onSubmit={onSubmit} onReset={onReset}>
+        <Grid container spacing={{ xs: 5, sm: 2, md: 13 }} justifyContent="center">
             <Grid item xs={10} sm={5} >
                 <FormControl fullWidth required>
                     <InputLabel id="course-select-label">Course Name</InputLabel>
@@ -57,7 +61,7 @@ function handlerOpeningDate(event: any) {
                         onChange={handlerCourse}
                     >
                         <MenuItem value="">None</MenuItem>
-                       {getCourseItems(courses)}
+                        {getCourseItems(courses)}
                     </Select>
                 </FormControl>
             </Grid>
@@ -72,51 +76,53 @@ function handlerOpeningDate(event: any) {
                         onChange={handlerLecturer}
                     >
                         <MenuItem value="">None</MenuItem>
-                       {getCourseItems(lectors)}
+                        {getCourseItems(lectors)}
                     </Select>
                 </FormControl>
             </Grid>
             <Grid item xs={10} sm={5}>
-                <TextField type="number" label="Hours" fullWidth required  
-                onChange={handlerHours} helperText={`enter number of hours in range [${minHours}-${maxHours} ]`}
-                inputProps={{
-                  
-                    min: `${minHours}`,
-                    max: `${maxHours}`
-                  }}/>
+                <TextField type="number" label="Hours" fullWidth required
+                    onChange={handlerHours} helperText={`enter number of hours in range [${minHours}-${maxHours} ]`}
+                    inputProps={{
+
+                        min: `${minHours}`,
+                        max: `${maxHours}`
+                    }} />
             </Grid>
             <Grid item xs={10} sm={5}>
-                <TextField type="number" label="Cost" fullWidth required  
-                onChange={handlerCost} helperText={`enter cost in range [${minCost}-${maxCost} ]`}
-                inputProps={{
-                   
-                    min: `${minCost}`,
-                    max: `${maxCost}`
-                  }}/>
+                <TextField type="number" label="Cost" fullWidth required
+                    onChange={handlerCost} helperText={`enter cost in range [${minCost}-${maxCost} ]`}
+                    inputProps={{
+
+                        min: `${minCost}`,
+                        max: `${maxCost}`
+                    }} />
             </Grid>
             <Grid item xs={10} sm={8} >
-                        <TextField required label={'Opening Date'} type={'date'} fullWidth
-                        onChange={handlerOpeningDate} inputProps={
-                            {min: `${minYear}-01-01`,
-                             max: `${maxYear}-12-31`}
-                        } InputLabelProps={{
-                            shrink: true
-                        }}/>
-                
-            </Grid>
-            <Grid item xs={12} sm={8} md={6}>
-               <Grid container justifyContent={"center"}>
-               <Grid item xs={5}>
-                <Button type="submit">Submit</Button>
-            </Grid>
-            <Grid item xs={5}>
-                <Button type="reset">Reset</Button>
-            </Grid>
-
-               </Grid>
+                <TextField required label={'Opening Date'} type={'date'} fullWidth
+                    onChange={handlerOpeningDate} inputProps={
+                        {
+                            min: `${minYear}-01-01`,
+                            max: `${maxYear}-12-31`
+                        }
+                    } InputLabelProps={{
+                        shrink: true
+                    }} />
 
             </Grid>
-           
+            <Grid item xs={10} sm={8} md={6}>
+                <Grid container justifyContent={"center"}>
+                    <Grid item xs={5}>
+                        <Button type="submit">Submit</Button>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <Button type="reset">Reset</Button>
+                    </Grid>
+
+                </Grid>
+
+            </Grid>
+
 
 
         </Grid>
