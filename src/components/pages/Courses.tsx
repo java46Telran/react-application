@@ -6,7 +6,7 @@ import { StateType } from "../../redux/store";
 import { DataGrid, GridColumns, GridRowParams, GridActionsCellItem } from '@mui/x-data-grid'
 import { Box, Paper } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
-import { removeCourse } from "../../redux/actions";
+import { removeCourse, updateCourse } from "../../redux/actions";
 import CourseForm from "../forms/CourseForm";
 function getActions(actionsFn: (params: GridRowParams)=>JSX.Element[]): GridColumns {
     const columns: GridColumns = [
@@ -25,6 +25,7 @@ const Courses: React.FC = () => {
     const dispatch = useDispatch()
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
     const [isEdit, setEdit] = React.useState(false);
+    const updatedCourse = React.useRef<Course>()
     function actionsFn(params: GridRowParams): JSX.Element[] {
         const actionElements: JSX.Element[] = [
             <GridActionsCellItem label="Remove" onClick={() => dispatch(removeCourse(params.id as number))}
@@ -34,15 +35,15 @@ const Courses: React.FC = () => {
         return actionElements;
     }
     function editFn(id: number) {
-        //TODO 
-        //sets a flag for conditional rendering: unmounting DataGrid and mounting COurseForm with being update course
-        //
+        updatedCourse.current = courses.find(c => c.id === id)
         setEdit(true);
     }
     const getActionsCallback = useCallback(getActions, [courses]);
     const columns = getActionsCallback(actionsFn);
-    return <Box sx={{display: 'flex', justifyContent: 'center' }}><Paper sx={{height: {xs: '70vh', sm: '85vh', md: '80vh'}, width: {xs: '100%', md: '80%'}}}>
-        {isEdit ? <CourseForm submitFn={() => setEdit(false)}/> : <DataGrid rows={courses} columns={columns} />}
+    return <Box sx={{display: 'flex', justifyContent: 'center' }}><Paper sx={{height: {xs: '90vh', sm: '85vh', md: '80vh'}, width: {xs: '100%', md: '80%'}}}>
+        {isEdit ? <CourseForm submitFn={(course) => {
+            setEdit(false); dispatch(updateCourse(course))}}
+             courseUpdate={updatedCourse.current}/> : <DataGrid rows={courses} columns={columns} />}
     </Paper></Box>
 
 }
