@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { coursesService } from "../../config/service-config";
 import { Course } from "../../models/Course";
 import { StateType } from "../../redux/store";
 import { DataGrid, GridColumns, GridRowParams, GridActionsCellItem } from '@mui/x-data-grid'
@@ -56,10 +55,7 @@ const Courses: React.FC = () => {
         shownCourse.current = courses.find(c => c.id === id);
         setModalOpen(true);
     }
-    function editFn(id: number) {
-        updatedCourse.current = courses.find(c => c.id === id)
-        setEdit(true);
-    }
+    
     function showRemoveConfirmation(id: number) {
         confirmationData.current.confirmHandler = removeAction.bind(undefined, id);
         confirmationData.current.title = 'Remove Course Confirmation'
@@ -73,11 +69,33 @@ const Courses: React.FC = () => {
         }
         setFlOpen(false)
     }
+    function editFn(id: number) {
+        updatedCourse.current = courses.find(c => c.id === id)
+        setEdit(true);
+    }
+    function showUpdateConfirmation(course: Course) {
+        if(isUpdated(courses, course)) {
+            confirmationData.current.confirmHandler = updateAction.bind(undefined, course);
+            confirmationData.current.title = 'Update Course Confirmation'
+            confirmationData.current.content = `You are going to update course with id ${course.id}`;
+            setFlOpen(true);
+        }
+        setEdit(false);
+        
+    }
+   
+    function updateAction(course: Course, flConfirm: boolean): void {
+        if (flConfirm) {
+            dispatch(updateCourse(course))
+        }
+        setFlOpen(false);
+        
+
+    }
     const getActionsCallback = useCallback(getActions, [courses]);
     const columns = getActionsCallback(actionsFn);
     return <Box sx={{display: 'flex', justifyContent: 'center' }}><Paper sx={{height: {xs: '90vh', sm: '85vh', md: '80vh'}, width: {xs: '100%', md: '80%'}}}>
-        {isEdit ? <CourseForm submitFn={(course) => {
-            setEdit(false); dispatch(updateCourse(course))}}
+        {isEdit ? <CourseForm submitFn={showUpdateConfirmation}
              courseUpdate={updatedCourse.current}/> : <DataGrid rows={courses} columns={columns} />}
     </Paper>
     <ActionConfirmation open={flOpen} title={confirmationData.current.title}
@@ -98,3 +116,11 @@ const Courses: React.FC = () => {
 
 }
 export default Courses;
+
+function isUpdated(courses: Course[], newCourse: Course): boolean {
+    const courseOld = courses.find(c => c.id === newCourse.id);
+    const courseOldJson = JSON.stringify(courseOld);
+    const courseNewJson = JSON.stringify(newCourse);
+   return !!courseOld && courseOldJson !== courseNewJson ; 
+
+}

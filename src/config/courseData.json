@@ -10,6 +10,9 @@
     "minId": 100000,
     "maxId": 999999,
     "hoursInterval": 20,
-    "costInterval": 2000
+    "costInterval": 2000,
+    "portrait": ["name", "openingDate", "actions"],
+    "landscape": ["name", "lecturer", "openingDate", "actions"],
+    "laptop": ["id", "name", "lecturer", "hours", "cost", "openingDate", "actions"]
 
 }
