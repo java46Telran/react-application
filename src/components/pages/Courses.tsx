@@ -9,8 +9,11 @@ import { removeCourse, updateCourse } from "../../redux/actions";
 import CourseForm from "../forms/CourseForm";
 import ActionConfirmation from "../dialogs/ActionConfirmation";
 import ConfirmationData from "../../models/ConfirmationData";
-function getActions(actionsFn: (params: GridRowParams)=>JSX.Element[]): GridColumns {
+import courseData from "../../config/courseData.json";
+import useLayout from "../../util/useLayout";
+function getActions(actionsFn: (params: GridRowParams)=>JSX.Element[], layout:string): GridColumns {
     const columns: GridColumns = [
+        {field: "id", type: "string", headerName: "ID", align: "center", headerAlign: "center", flex:0.5},
     { field: "name", type: "string", headerName: "Course Name", align: "center", headerAlign: "center", flex:1 },
     { field: "lecturer", type: "string", headerName: "Lecturer", align: "center", headerAlign: "center", flex: 0.7 },
     { field: "hours", type: "number", headerName: "Hours", align: "right", headerAlign: "center", flex: 0.5 },
@@ -19,19 +22,21 @@ function getActions(actionsFn: (params: GridRowParams)=>JSX.Element[]): GridColu
     { field: "actions", type: "actions", flex: 0.5, getActions:actionsFn}
 
 ]
-return columns
+
+return columns.filter(c => (courseData as any)[layout].includes(c.field));
 }
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 300,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
   };
+  
 const Courses: React.FC = () => {
     const dispatch = useDispatch()
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
@@ -41,6 +46,7 @@ const Courses: React.FC = () => {
     const confirmationData = React.useRef<ConfirmationData>({title:'', content:'',confirmHandler:()=>{}});
     const updatedCourse = React.useRef<Course>();
     const shownCourse = React.useRef<Course>();
+    const layout = useLayout();
     function actionsFn(params: GridRowParams): JSX.Element[] {
         const actionElements: JSX.Element[] = [
             <GridActionsCellItem label="Remove" onClick={() => showRemoveConfirmation(params.id as number)}
@@ -92,8 +98,8 @@ const Courses: React.FC = () => {
         
 
     }
-    const getActionsCallback = useCallback(getActions, [courses]);
-    const columns = getActionsCallback(actionsFn);
+    const getActionsCallback = useCallback(getActions, [courses, layout]);
+    const columns = getActionsCallback(actionsFn, layout);
     return <Box sx={{display: 'flex', justifyContent: 'center' }}><Paper sx={{height: {xs: '90vh', sm: '85vh', md: '80vh'}, width: {xs: '100%', md: '80%'}}}>
         {isEdit ? <CourseForm submitFn={showUpdateConfirmation}
              courseUpdate={updatedCourse.current}/> : <DataGrid rows={courses} columns={columns} />}
