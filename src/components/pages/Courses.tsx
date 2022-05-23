@@ -39,7 +39,7 @@ const style = {
   };
   
 const Courses: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
     const clientData = useSelector<StateType, ClientData>(state => state.clientData);
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
     const [isEdit, setEdit] = React.useState(false);

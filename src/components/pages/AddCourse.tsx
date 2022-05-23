@@ -8,7 +8,7 @@ import CourseForm from "../forms/CourseForm";
 import { Course } from "../../models/Course";
 const AddCourse: React.FC = () =>
 {
-   const dispatch = useDispatch();
+   const dispatch = useDispatch<any>();
    function onSubmit(course: Course) {
        console.log(course);
        dispatch(addCourse(course));
