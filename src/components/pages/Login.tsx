@@ -11,11 +11,13 @@ import LoginForm from "../forms/LoginForm";
 const Login: React.FC = () =>
 {
     const dispatch = useDispatch();
-    return <LoginForm submitFn={function (loginData: LoginData): void {
+    return <LoginForm submitFn={function (loginData: LoginData): boolean {
         const clientData = authService.login(loginData);
         if (!!clientData) {
             dispatch(authAction(clientData as ClientData))
+            return true;
         }
+        return false;
     }  }/>
 }
 
