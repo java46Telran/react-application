@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginData from '../../models/LoginData';
+import { Alert } from '@mui/material';
 type Props = {
     submitFn: (loginData: LoginData)=>boolean
 }
@@ -31,12 +32,15 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function LoginForm({submitFn}: Props) {
+    const [flAlert, setAlert] = React.useState<boolean>(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginData = {email: data.get('email') as string, password: data.get('password') as string}
     console.log(loginData);
-    submitFn(loginData);
+    if(!submitFn(loginData)) {
+        setAlert(true)
+    }
     
   };
 
@@ -52,6 +56,8 @@ export default function LoginForm({submitFn}: Props) {
             alignItems: 'center',
           }}
         >
+            {flAlert && <Alert onClose={() => setAlert(false)} severity='error'
+             sx={{width: '50vw', mb: {xs: 5,sm:1,md: 5}}}>Wrong Credentials</Alert>}
           <Avatar sx={{  bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
