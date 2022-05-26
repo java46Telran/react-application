@@ -13,5 +13,9 @@ export const clientDataReducer: Reducer<ClientData, PayloadAction<ClientData>> =
 (clientData = localStorage.getItem(CLIENT_DATA_ITEM)?
  JSON.parse(localStorage.getItem(CLIENT_DATA_ITEM) as string) : emptyClientData, action): ClientData => {
    
-    return action.type === AUTH_ACTION ? action.payload : clientData;
+    if (action.type === AUTH_ACTION) {
+        localStorage.setItem(CLIENT_DATA_ITEM, JSON.stringify(action.payload));
+        return action.payload;
+    }
+    return clientData;
 }
