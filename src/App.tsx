@@ -17,7 +17,7 @@ const App: React.FC = () => {
   //useImitator();
   useEffect(() => {
     coursesService.get().then(courses => dispatch(setCourses(courses)))
-  })
+  },[])
   const [flNavigate, setFlNavigate] = React.useState<boolean>(true); 
   const relevantItems: RouteType[] = React.useMemo<RouteType[]>(() => getRelevantItems(clientData), [clientData])
   React.useEffect(() => setFlNavigate(false), [])

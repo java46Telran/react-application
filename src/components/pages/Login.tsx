@@ -16,8 +16,8 @@ const Login: React.FC = () =>
     const navigate = useNavigate()
 
     const dispatch = useDispatch();
-    return <LoginForm submitFn={function (loginData: LoginData): boolean {
-        const clientData = authService.login(loginData);
+    return <LoginForm submitFn={async function (loginData: LoginData): Promise<boolean> {
+        const clientData = await authService.login(loginData);
         if (!!clientData) {
             dispatch(authAction(clientData as ClientData))
             navigate(COURSES_PATH);

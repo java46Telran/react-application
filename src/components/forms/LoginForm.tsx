@@ -14,7 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginData from '../../models/LoginData';
 import { Alert } from '@mui/material';
 type Props = {
-    submitFn: (loginData: LoginData)=>boolean
+    submitFn: (loginData: LoginData)=>Promise<boolean>
 }
 function Copyright(props: any) {
   return (
@@ -33,12 +33,12 @@ const theme = createTheme();
 
 export default function LoginForm({submitFn}: Props) {
     const [flAlert, setAlert] = React.useState<boolean>(false);
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginData = {email: data.get('email') as string, password: data.get('password') as string}
     console.log(loginData);
-    if(!submitFn(loginData)) {
+    if(!(await submitFn(loginData))) {
         setAlert(true)
     }
     
