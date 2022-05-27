@@ -2,7 +2,8 @@ import { Course } from "../models/Course";
 import { AUTH_TOKEN_ITEM } from "./AuthServiceJwt";
 import CoursesService from "./CoursesService";
 function getHeaders(): any {
-    return {Authorization: "Bearer " + localStorage.getItem(AUTH_TOKEN_ITEM)}
+    return {Authorization: "Bearer " + localStorage.getItem(AUTH_TOKEN_ITEM),
+"Content-Type": "application/json"}
 }
 export default class CoursesServiceRest implements CoursesService {
     constructor(private url: string){
