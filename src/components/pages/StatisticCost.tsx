@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { coursesService } from "../../config/service-config";
 import { Course } from "../../models/Course";
 import { StateType } from "../../redux/store";
 import courseData from "../../config/courseData.json"

@@ -1,10 +1,9 @@
 import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
-import { DataGrid, GridColumns, gridEditRowsStateSelector } from "@mui/x-data-grid";
+import { DataGrid, GridColumns } from "@mui/x-data-grid";
 import React from "react";
-import { useSelector } from "react-redux";
-import { Course } from "../../models/Course";
+
 import Distribution from "../../models/Distribution";
-import { StateType } from "../../redux/store";
+
 import { getStatistics } from "../../util/functions";
 type Props = {
     field: string,
@@ -60,7 +59,7 @@ const Statistics: React.FC<Props> = ({ field, title, unit, intervals, objects })
 
         </Select>
         <Button onClick={showStatistics} disabled={!flShow.current}>Show Statistics</Button></Box>
-        <Box sx={{height: "60vh"}}>
+        <Box sx={{height: {xs: "60vh", sm: "45vh", md: "60vh"}}}>
             <DataGrid rows={rows} columns={columns}></DataGrid>
         </Box>
         

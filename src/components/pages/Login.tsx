@@ -6,7 +6,8 @@ import { COURSES_PATH } from "../../config/routes-config";
 import { authService } from "../../config/service-config";
 import { ClientData } from "../../models/ClientData";
 import LoginData from "../../models/LoginData";
-import { authAction } from "../../redux/actions";
+import { OperationCode } from "../../models/OperationCode";
+import { authAction, setOperationCode } from "../../redux/actions";
 
 import LoginForm from "../forms/LoginForm";
 
@@ -20,6 +21,7 @@ const Login: React.FC = () =>
         const clientData = await authService.login(loginData);
         if (!!clientData) {
             dispatch(authAction(clientData as ClientData))
+            dispatch(setOperationCode(OperationCode.OK))
             navigate(COURSES_PATH);
             return true;
         }
