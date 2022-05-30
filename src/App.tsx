@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import {  COURSES_PATH, LOGIN_PATH, ROUTES } from './config/routes-config';
+import {  COURSES_PATH, LOGIN_PATH, LOGOUT_PATH, ROUTES } from './config/routes-config';
 import Navigator from './components/navigators/Navigator';
 import { useImitator } from './util/useImitator';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,7 @@ return <BrowserRouter>
 {flNavigate && (clientData.email ? <Navigate to={COURSES_PATH}></Navigate> : 
 <Navigate to={LOGIN_PATH}></Navigate>)}
 <Routes>
-  {getRoutes(relevantItems)}
+  {getRoutes(relevantItems, clientData)}
   
 </Routes> 
 </BrowserRouter> 
@@ -35,7 +35,11 @@ return <BrowserRouter>
 }
 
 export default App;
-function getRoutes(relevantItems: RouteType[]): React.ReactNode {
+function getRoutes(relevantItems: RouteType[], clientData: ClientData): React.ReactNode {
+  const logoutRoute = relevantItems.find(ri => ri.path === LOGOUT_PATH);
+  if (logoutRoute) {
+    logoutRoute.label = clientData.displayName;
+  }
   return relevantItems.map(r => <Route key={r.path} path={r.path} element={r.element}/>)
 }
 
