@@ -17,19 +17,29 @@ async function responseProcessing(response: Response): Promise<any> {
     }
     throw OperationCode.UNKNOWN
 }
+
 export default class CoursesServiceRest implements CoursesService {
     private observable: Observable<Course[] | OperationCode> | undefined;
     private observer: Subscriber<Course[] | OperationCode> | undefined;
+    private coursesJson: string = '';
     constructor(private url: string){
         console.log(url)
     }
     private observing() {
-        this.get().then(courses => this.observer?.next(courses))
+        this.get().then(courses => {
+            if (this.coursesJson !== JSON.stringify(courses)) {
+                console.log('publishing');
+                this.observer?.next(courses)
+                this.coursesJson = JSON.stringify(courses);
+            }
+            
+        } )
         .catch(err => {
             if (err == OperationCode.UNKNOWN){
                 this.observer?.next(OperationCode.UNKNOWN)
                 this.observer?.complete();
             } else {
+                this.coursesJson = '';
                 this.observer?.next(err)
             }
             
@@ -38,9 +48,10 @@ export default class CoursesServiceRest implements CoursesService {
     getObservableData(): Observable<Course[] | OperationCode> {
         if (!this.observable || this.observer!.closed) {
             this.observable = new Observable(observer => {
-                let intervalId:any;
+                let intervalId: any;
                 this.observer = observer;
                 this.observing();
+               
                 intervalId = setInterval(this.observing.bind(this), POLLING_INTERVAL);
                 return () => clearInterval(intervalId)
 
