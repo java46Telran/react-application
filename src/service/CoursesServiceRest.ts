@@ -17,7 +17,7 @@ async function responseProcessing(response: Response): Promise<any> {
     }
     throw OperationCode.UNKNOWN
 }
-
+let intervalId: any;
 export default class CoursesServiceRest implements CoursesService {
     private observable: Observable<Course[] | OperationCode> | undefined;
     private observer: Subscriber<Course[] | OperationCode> | undefined;
@@ -46,14 +46,20 @@ export default class CoursesServiceRest implements CoursesService {
         })
     }
     getObservableData(): Observable<Course[] | OperationCode> {
-        if (!this.observable || this.observer!.closed) {
+        if (!this.observable) {
             this.observable = new Observable(observer => {
-                let intervalId: any;
+               
                 this.observer = observer;
                 this.observing();
-               
+                if (intervalId) {
+                    clearInterval(intervalId)
+                }
                 intervalId = setInterval(this.observing.bind(this), POLLING_INTERVAL);
-                return () => clearInterval(intervalId)
+                console.log(intervalId);
+                return () => {
+                    console.log("clearing interval", intervalId)
+                    clearInterval(intervalId);
+                }
 
             })
         }
