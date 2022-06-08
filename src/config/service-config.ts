@@ -6,4 +6,5 @@ import CoursesServiceRest from "../service/CoursesServiceRest";
 import courseData from '../config/courseData.json'
 
 export const coursesService = new CoursesServiceFirebase(courseData.minId, courseData.maxId);
+//export const coursesService = new CoursesServiceRest('http://localhost:3500/courses');
 export const authService = new AuthServiceJwt('http://localhost:3500/login');

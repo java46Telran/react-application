@@ -20,9 +20,13 @@ export default class CoursesServiceFirebase implements CoursesService {
         }
     }
     private async exists(id: number): Promise<boolean> {
-        const docRef = doc(this.firestoreCollection, id.toString());
-        const docSnap = await getDoc(docRef);
-        return docSnap.exists();
+        try {
+            const docRef = doc(this.firestoreCollection, id.toString());
+            const docSnap = await getDoc(docRef);
+            return docSnap.exists();
+        } catch (err) {
+            throw OperationCode.AUTH_ERROR
+        }
 
     }
     private async setCourse(course: Course) {

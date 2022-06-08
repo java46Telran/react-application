@@ -13,6 +13,7 @@ import { OperationCode } from './models/OperationCode';
 import { Box, Alert, LinearProgress } from '@mui/material';
 import courseData from './config/courseData.json'
 import { Course } from './models/Course';
+import { Subscription } from 'rxjs';
 const SERVER_UNAVAILABLE_MESSAGE = `server is unavailable;
   waiting for retry  `
 const UNKNOWN_ERROR_MESSAGE = `unknown error; contact the application staff courses.admin@tel-ran.com`
@@ -20,7 +21,7 @@ const UNKNOWN_ERROR_MESSAGE = `unknown error; contact the application staff cour
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const [flAlert, setAlert] = React.useState(false);
-  const flUnknown = React.useRef(false);
+  const [flUnknown, setFlUnknown] = React.useState(false);
   const alertMessage = React.useRef('');
   
   
@@ -28,24 +29,36 @@ const App: React.FC = () => {
   const operationCode: OperationCode = useSelector<StateType, OperationCode>(state => state.operationCode);
   //useImitator();
   useEffect(() => {
-    getData(dispatch);
-  }, [])
+  getData(dispatch);
+    
+  }, [clientData])
+ 
+  const flSignIn = React.useRef<boolean>(false);
   const [flNavigate, setFlNavigate] = React.useState<boolean>(true);
   const relevantItems: RouteType[] = React.useMemo<RouteType[]>(() => getRelevantItems(clientData), [clientData])
   React.useEffect(() => setFlNavigate(false), [])
   function operationCodeHandler() {
+    console.log("operation code", operationCode)
     if (operationCode === OperationCode.AUTH_ERROR) {
+     if (flSignIn.current) {
+       dispatch(setOperationCode(OperationCode.UNKNOWN));
+       return;
+     }
+     flSignIn.current = true;
+     setTimeout(()=>flSignIn.current=false, 20000)
       dispatch(authAction(emptyClientData));
     } else if (operationCode === OperationCode.SERVER_UNAVAILABLE) {
       setAlert(true);
-      flUnknown.current = false;
+      setFlUnknown(false);
       alertMessage.current = SERVER_UNAVAILABLE_MESSAGE;
     } else if (operationCode === OperationCode.UNKNOWN) {
       setAlert(true);
-      flUnknown.current = true;
+      setFlUnknown(true);
       alertMessage.current = UNKNOWN_ERROR_MESSAGE;
     } else {
       setAlert(false);
+    
+      
     }
   }
 
@@ -59,7 +72,7 @@ const App: React.FC = () => {
       <Alert severity='error'>
         {alertMessage.current}
       </Alert>
-      {!flUnknown.current && <LinearProgress />}
+      {!flUnknown && <LinearProgress />}
     </Box> : <BrowserRouter>
       <Navigator items={relevantItems} />
       {flNavigate && (clientData.email ? <Navigate to={COURSES_PATH}></Navigate> :
@@ -75,16 +88,14 @@ const App: React.FC = () => {
 
 export default App;
 function getData(dispatch: any) {
-  // coursesService.get().then(courses => {
-  //   dispatch(setCourses(courses));
-  //   dispatch(setOperationCode(OperationCode.OK));
-  // }).catch(err => dispatch(setOperationCode(err)));
+  
   coursesService.getObservableData().subscribe({
     next: courses_err => {
       if (Array.isArray(courses_err)) {
-        dispatch(setCourses(courses_err as Course[]));
-        dispatch(setOperationCode(OperationCode.OK));
+          dispatch(setCourses(courses_err as Course[]));
+          dispatch(setOperationCode(OperationCode.OK));
       } else {
+        console.log("getting operation code", courses_err)
          dispatch(setOperationCode(courses_err as OperationCode))
       }
     }

@@ -7,7 +7,8 @@ function getHeaders(): any {
     return {Authorization: "Bearer " + localStorage.getItem(AUTH_TOKEN_ITEM),
 "Content-Type": "application/json"}
 }
-const POLLING_INTERVAL = 20000
+const POLLING_INTERVAL = 20000;
+const UNAVAIABILITY_TIMEOUT = 50000;
 async function responseProcessing(response: Response): Promise<any> {
     if (response.status < 400) {
         return await response.json();
@@ -17,7 +18,8 @@ async function responseProcessing(response: Response): Promise<any> {
     }
     throw OperationCode.UNKNOWN
 }
-
+let timeoutId:any;
+let intervalId: any;
 export default class CoursesServiceRest implements CoursesService {
     private observable: Observable<Course[] | OperationCode> | undefined;
     private observer: Subscriber<Course[] | OperationCode> | undefined;
@@ -25,8 +27,15 @@ export default class CoursesServiceRest implements CoursesService {
     constructor(private url: string){
         console.log(url)
     }
+   
     private observing() {
+        
         this.get().then(courses => {
+            if (timeoutId) {
+                console.log("clearing timeout interval", timeoutId)
+                clearTimeout(timeoutId);
+                timeoutId = undefined;
+            }
             if (this.coursesJson !== JSON.stringify(courses)) {
                 console.log('publishing');
                 this.observer?.next(courses)
@@ -36,24 +45,46 @@ export default class CoursesServiceRest implements CoursesService {
         } )
         .catch(err => {
             if (err == OperationCode.UNKNOWN){
-                this.observer?.next(OperationCode.UNKNOWN)
-                this.observer?.complete();
+                this.closeObserver();
             } else {
                 this.coursesJson = '';
+                if (err === OperationCode.SERVER_UNAVAILABLE) {
+                    if(!timeoutId) {
+                        
+                        timeoutId = setTimeout(this.closeObserver.bind(this), UNAVAIABILITY_TIMEOUT);
+                        console.log("setting timeout", timeoutId)
+                    } else {
+                        return;
+                    }
+                }
                 this.observer?.next(err)
             }
             
         })
     }
+    private closeObserver() {
+        console.log("closing observer", timeoutId)
+        this.observer?.next(OperationCode.UNKNOWN);
+        console.log("publishing unknown error")
+        this.observer?.complete();
+    }
+
     getObservableData(): Observable<Course[] | OperationCode> {
-        if (!this.observable || this.observer!.closed) {
+       
+        if (!this.observable ) {
+           
             this.observable = new Observable(observer => {
-                let intervalId: any;
+                if (intervalId) {
+                    clearInterval(intervalId)
+                    console.log("clearing interval", intervalId)
+                }
                 this.observer = observer;
                 this.observing();
                
                 intervalId = setInterval(this.observing.bind(this), POLLING_INTERVAL);
-                return () => clearInterval(intervalId)
+                console.log("intervalId", intervalId)
+                return () =>{ clearInterval(intervalId);
+                console.log("clearing interval", intervalId)}
 
             })
         }
