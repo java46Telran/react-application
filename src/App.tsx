@@ -14,6 +14,7 @@ import { Box, Alert, LinearProgress } from '@mui/material';
 import courseData from './config/courseData.json'
 import { Course } from './models/Course';
 import { Subscription } from 'rxjs';
+
 const SERVER_UNAVAILABLE_MESSAGE = `server is unavailable;
   waiting for retry  `
 const UNKNOWN_ERROR_MESSAGE = `unknown error; contact the application staff courses.admin@tel-ran.com`
@@ -29,8 +30,8 @@ const App: React.FC = () => {
   const operationCode: OperationCode = useSelector<StateType, OperationCode>(state => state.operationCode);
   //useImitator();
   useEffect(() => {
-  getData(dispatch);
-    
+  const subscription = getData(dispatch);
+   return () => subscription.unsubscribe(); 
   }, [clientData])
  
   const flSignIn = React.useRef<boolean>(false);
@@ -87,9 +88,9 @@ const App: React.FC = () => {
 }
 
 export default App;
-function getData(dispatch: any) {
+function getData(dispatch: any): Subscription {
   
-  coursesService.getObservableData().subscribe({
+  return coursesService.getObservableData().subscribe({
     next: courses_err => {
       if (Array.isArray(courses_err)) {
           dispatch(setCourses(courses_err as Course[]));
