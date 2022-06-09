@@ -15,4 +15,7 @@ const reducer = combineReducers<StateType> ({
    clientData: clientDataReducer as any,
    operationCode: operationCodeReducer as any
 })
-export const store = configureStore({reducer})
+export const store = configureStore({reducer,
+     middleware: (getMiddleware) => getMiddleware({
+         serializableCheck: false
+     })})
