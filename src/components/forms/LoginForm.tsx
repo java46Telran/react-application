@@ -12,9 +12,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginData from '../../models/LoginData';
-import { Alert } from '@mui/material';
+import { Alert, IconButton } from '@mui/material';
+import NetworkIcon from '../../models/NetworkIcon';
 type Props = {
-    submitFn: (loginData: LoginData)=>Promise<boolean>
+    submitFn: (loginData: LoginData)=>Promise<boolean>;
+    networks?: NetworkIcon[]
 }
 function Copyright(props: any) {
   return (
@@ -31,7 +33,7 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function LoginForm({submitFn}: Props) {
+export default function LoginForm({submitFn, networks}: Props) {
     const [flAlert, setAlert] = React.useState<boolean>(false);
   const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,6 +45,17 @@ export default function LoginForm({submitFn}: Props) {
     }
     
   };
+  function getNetworkIcons(): React.ReactNode {
+    if (networks) {
+        return networks.map(nw => <IconButton key={nw.name}
+           onClick={() =>
+            submitFn({ email: nw.name, password: '' })}
+             >
+
+            <Avatar src={nw.iconURL} sx={{width:{xs: '6vh', sm: '6vw', lg: '3vw'}}}  />
+        </IconButton>)
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -93,7 +106,10 @@ export default function LoginForm({submitFn}: Props) {
             >
               Sign In
             </Button>
-           
+            { (networks && networks.length != 0) && <Box>
+             Or with <br/>  
+              {getNetworkIcons()}
+            </Box>}
           </Box>
         </Box>
         <Copyright sx={{mt: {xs: 5, sm:2, md: 5}  }} />

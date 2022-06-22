@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { COURSES_PATH, LOGIN_PATH, LOGOUT_PATH, ROUTES } from './config/routes-config';
+import { COURSES_PATH, DEVELOPMENT_ROUTES, LOGIN_PATH, LOGOUT_PATH, ROUTES } from './config/routes-config';
 import Navigator from './components/navigators/Navigator';
 import { useImitator } from './util/useImitator';
 import { useDispatch, useSelector } from 'react-redux';
@@ -112,7 +112,8 @@ function getRoutes(relevantItems: RouteType[], clientData: ClientData): React.Re
 }
 
 function getRelevantItems(clientData: ClientData): RouteType[] {
-  //TODO for admin
+
+  
   return ROUTES.filter(r => (!!clientData.email && r.authenticated) ||
     (!clientData.email && !r.authenticated && !r.administrator)
      || (clientData.isAdmin && r.administrator))

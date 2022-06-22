@@ -4,6 +4,9 @@ import AuthService from "./AuthService";
 export const AUTH_TOKEN_ITEM = "auth-token";
 export default class AuthServiceJwt implements AuthService {
     constructor(private url: string) {}
+    getSupportedAuthProviders(): string[] {
+        return [];
+    }
     async login(loginData: LoginData): Promise<boolean | ClientData> {
        const response = await fetch(this.url, {
            method: "POST",

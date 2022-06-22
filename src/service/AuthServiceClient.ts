@@ -7,6 +7,9 @@ const accounts: any[] = [
     {email: "admin@gmail.com", password: "admin1234", role: "ADMIN"}
 ]
 export default class AuthServiceClient implements AuthService {
+    getSupportedAuthProviders(): string[] {
+        return [];
+    }
     async login(loginData: LoginData): Promise<boolean | ClientData> {
         const account = accounts
         .find(a => loginData.email === a.email && loginData.password === a.password);
